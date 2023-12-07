@@ -1,1 +1,1 @@
-https://codelabs.developers.google.com/your-first-webgpu-app#3
+https://codelabs.developers.google.com/your-first-webgpu-app#6
