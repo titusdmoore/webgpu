@@ -24,6 +24,7 @@ async function webGPU() {
         label: "Cell Shader",
         code: `
         @group(0) @binding(0) var<uniform> grid: vec2f;
+        @group(0) @binding(1) var<storage> cellState: array<u32>;
 
         struct VertexInput {
             @location(0) pos: vec2f,
@@ -112,6 +113,16 @@ async function webGPU() {
             resource: { buffer: uniformBuffer }
         }],
     });
+    const cellStateArray = new Uint32Array(GRID_SIZE, GRID_SIZE);
+    const cellStateStorage = device.createBuffer({
+        label: "Cell State",
+        size: cellStateArray.byteLength,
+        usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DIST,
+    });
+    for (let i = 0; i < cellStateArray.length; i += 3) {
+        cellStateArray[i] = 1;
+    }
+    device.queue.writeBuffer(cellStateStorage, 0, cellStateArray);
 
     const pass = encoder.beginRenderPass({
         colorAttachments: [{
